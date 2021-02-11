@@ -69,7 +69,7 @@ public class DBHandler extends SQLiteOpenHelper {
     /**
      * This method gets called when the add button in the Action bar of the
      * CreateList Activity gets clicked. It inserts a new raw into the shopping
-     * list table
+     * list table.
      * @param name shopping list name
      * @param store shopping list store
      * @param date shopping list date

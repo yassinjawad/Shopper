@@ -22,10 +22,12 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
 
     // declare a DBHandler
-    DBHandler dbHandler = new DBHandler(this, null);
+    DBHandler dbHandler;
 
-    CursorAdapter shoppingListsCursorAdapter = new ShoppingLists(this,
-            dbHandler.getShoppingList(), 0);
+    // declare a ShoppingLists CursorAdapter
+    CursorAdapter shoppingListsCursorAdapter;
+
+    // declare a ListView
     ListView shopperListView;
 
     /**
@@ -40,8 +42,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // initialize DBHandler
+        dbHandler = new DBHandler(this, null);
+
+        // initialize ListView
         shopperListView = (ListView) findViewById(R.id.shopperListView);
 
+        // initialize ShoppingLists CursorAdapter
+        shoppingListsCursorAdapter = new ShoppingLists(this,
+                dbHandler.getShoppingLists(), 0);
+
+        // set ShoppingLists CursorAdapter on the ListView
         shopperListView.setAdapter(shoppingListsCursorAdapter);
 
     }

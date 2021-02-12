@@ -33,7 +33,7 @@ public class ShoppingLists extends CursorAdapter {
      * @param context reference to the Activity that initializes the
      *                ShoppingLists CursorAdapter
      * @param cursor reference to the Cursor that contains the data selected
-     *                        from the shoppinglist table
+     *               from the shoppinglist table
      * @param parent reference to shopperListView that will contain the new
      *               View created by this method.
      * @return reference to the new View

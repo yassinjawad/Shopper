@@ -98,7 +98,7 @@ public class DBHandler extends SQLiteOpenHelper {
      * select and return all of the data in the shoppinglist table.
      * @return Cursor that contains all data in the shoppinglist table.
      */
-    public Cursor getShoppingList() {
+    public Cursor getShoppingLists() {
 
         // get reference to the shopper database
         SQLiteDatabase db = getWritableDatabase();

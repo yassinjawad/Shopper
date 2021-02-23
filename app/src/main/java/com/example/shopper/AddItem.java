@@ -12,8 +12,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-public class AddItem extends AppCompatActivity {
+public class AddItem extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // declare a Bundle and a long used to get and store the data sent from
     // the ViewList Activity
@@ -25,6 +30,13 @@ public class AddItem extends AppCompatActivity {
 
     // declare Intent
     Intent intent;
+
+    EditText nameEditText;
+    EditText priceEditText;
+
+    Spinner quantitySpinner;
+
+    String quantity;
 
 
     @Override
@@ -42,6 +54,20 @@ public class AddItem extends AppCompatActivity {
 
         // initialize the DBHandler
         dbHandler = new DBHandler(this, null);
+
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        priceEditText = (EditText) findViewById(R.id.priceEditText);
+
+        quantitySpinner = (Spinner) findViewById(R.id.quantitySpinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.quantities, android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        quantitySpinner.setAdapter(adapter);
+
+        quantitySpinner.setOnItemSelectedListener(this);
     }
 
     /**
@@ -90,7 +116,42 @@ public class AddItem extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method gets called when the add button in the action bar
+     * @param menuItem
+     */
     public void addItem(MenuItem menuItem){
+
+        String name = nameEditText.getText().toString();
+        String price = priceEditText.getText().toString();
+
+        if (name.trim().equals("") || price.trim().equals("") || quantity.trim().equals("")) {
+            Toast.makeText(this, "Please enter a name, price, and quantity!",
+                    Toast.LENGTH_LONG).show();
+        } else {
+
+            dbHandler.addItemToList(name, Double.parseDouble(price),
+                    Integer.parseInt(quantity), (int) id);
+            Toast.makeText(this, "Item Add!",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    /**
+     * This method gets called when an item in the spinner is selected
+     * @param parent spinner AdapterView
+     * @param view AddItem view
+     * @param position position of item that was selected in the spinner
+     * @param id database id of item that was selected in the spinner
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        quantity = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 }

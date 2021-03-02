@@ -12,7 +12,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class VeiwList extends AppCompatActivity {
 
@@ -54,12 +56,32 @@ public class VeiwList extends AppCompatActivity {
         // set the title of the ViewList Activity to the shopping list name
         this.setTitle(shoppingListName);
 
+        // initialize the ListView
         itemListView = (ListView) findViewById(R.id.itemsListView);
 
+        // initialize the getShoppingListItems cursor Adapter
         shoppingListItemsAdapter = new ShoppingListItems(this,
                 dbHandler.getShoppingListItems((int) id), 0);
 
+        // set th getShoppingListItems cursor Adapter on the ListView
         itemListView.setAdapter(shoppingListItemsAdapter);
+
+        // register the ShoppingListItems
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * This method gets called when an item in the listView is clicked
+             * @param parent itemListView
+             * @param view ViewList Activity view
+             * @param position position of clicked item
+             * @param id databse id of clicked item
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // call method that updates the clicked item item_has to true
+                // if it's false
+                updateItem(id);
+            }
+        });
     }
 
     /**
@@ -119,5 +141,26 @@ public class VeiwList extends AppCompatActivity {
         // put the database id in the Intent
         intent.putExtra("_id", id);
         startActivity(intent);
+    }
+
+    /**
+     * This method gets called when an item is clicked in the listView.
+     * It updates the clicked item's item_has to true if it's false
+     * @param id database id of the clicked item.
+     */
+    public void updateItem(long id) {
+
+        // checking if the clicked item is unpurchased
+        if(dbHandler.isItemUnPurchased((int) id) ==1){
+            // make clicked item purchased
+            dbHandler.updateItem((int) id);
+
+            // refresh ListView with updated data
+            shoppingListItemsAdapter.swapCursor(dbHandler.getShoppingListItems((int) this.id));
+            shoppingListItemsAdapter.notifyDataSetChanged();
+
+            // display Toast indicating item is purchased
+            Toast.makeText(this, "Item purchased!", Toast.LENGTH_LONG).show();
+        }
     }
 }

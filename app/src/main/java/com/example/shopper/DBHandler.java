@@ -212,7 +212,8 @@ public class DBHandler extends SQLiteOpenHelper {
     /**
      * This method gets called when the ViewList Activity is clicked
      * @param listId shopping list id
-     * @return
+     * @return Cursor that contains all of the items associated with
+     * the specified shopping list id
      */
     public Cursor getShoppingListItems(Integer listId) {
 
@@ -226,5 +227,49 @@ public class DBHandler extends SQLiteOpenHelper {
         // execute select statement and return it as a Cursor
         return db.rawQuery(query, null);
 
+    }
+
+    /**
+     * This method gets called when an item in the ViewList activity is clicked
+     * @param itemId database id of the clicked item
+     * @return 1 if the clicked item is unpurchased, else 0
+     */
+    public int isItemUnPurchased(Integer itemId) {
+
+        // get reference to the shopper database
+        SQLiteDatabase db = getWritableDatabase();
+
+        // define select statement and store it in a String
+        String query = "SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM +
+                " WHERE " + COLUMN_ITEM_HAS + " = \"false\" " +
+                " AND " +COLUMN_ITEM_ID + " = " + itemId;
+
+        // execute select statement and store result in a Cursor
+        Cursor cursor = db.rawQuery(query,null);
+
+        // return a count of the number of rows in the Cursor
+        return (cursor.getCount());
+    }
+
+    /**
+     * This method gets called when an item in the ViewList activity is clicked
+     * It sets the clicked item's item_has value to true.
+     * @param itemId database id of the clicked item
+     */
+    public void updateItem(Integer itemId){
+
+        // get reference to the shopper database
+        SQLiteDatabase db = getWritableDatabase();
+
+        // define update statement and store it in a String
+        String query = "UPDATE " + TABLE_SHOPPING_LIST_ITEM + " SET " +
+                COLUMN_ITEM_HAS + " = \"true\" " + "WHERE " +
+                COLUMN_ITEM_ID + " = " + itemId;
+
+        // execute the update statement
+        db.execSQL(query);
+
+        // close db connection
+        db.close();
     }
 }

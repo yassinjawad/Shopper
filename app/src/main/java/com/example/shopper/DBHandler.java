@@ -331,7 +331,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(query1);
 
         // delete statement and store it in String
-        String query2 = "DELETE FROM " + TABLE_SHOPPING_LIST  +
+        String query2 = "DELETE FROM " + TABLE_SHOPPING_LIST   +
                 " WHERE " + COLUMN_LIST_ID + " = " + listId;
 
         // execute the delete statement
@@ -377,5 +377,24 @@ public class DBHandler extends SQLiteOpenHelper {
 
         // return String
         return cost;
+    }
+
+    /**
+     * This method gets cold when a shopping list item is clicked in the ViewList activity.
+     * @param listid database id of the shopping list on wich the shopping list
+     * @return
+     */
+    public int getUnpurchasedItems (Integer listId){
+
+        // get reference to the shopper database
+        SQLiteDatabase db = getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_SHOPPING_LIST_ITEM +
+                " WHERE " + COLUMN_ITEM_HAS + " = \"false\" " +
+                " AND " + COLUMN_ITEM_LIST_ID + " = " + listId;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        return  cursor.getCount();
     }
 }
